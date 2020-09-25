@@ -1,0 +1,5 @@
+.profile__intro-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
