@@ -1,6 +1,15 @@
 .profile__wrapper {
-  min-width: 486px;
+  width: 100%;
+  max-width: 486px;
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+@media screen and (max-width: 688px) {
+  .profile__wrapper {
+    min-height: 200px;
+    flex-direction: column;
+    text-align: center;
+  }
 }

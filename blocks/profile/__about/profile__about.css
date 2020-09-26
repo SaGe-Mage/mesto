@@ -3,5 +3,13 @@
   font-style: normal;
   font-weight: normal;
   font-size: 18px;
-  line-height: 22px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+@media screen and (max-width: 688px) {
+  .profile__about {
+    font-size: 14px;
+  }
 }
