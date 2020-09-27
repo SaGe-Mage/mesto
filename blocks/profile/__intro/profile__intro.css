@@ -1,14 +1,7 @@
 .profile__intro {
   width: 100%;
   max-width:  336px;
-  min-height: 77px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-}
-
-@media screen and (max-width: 688px) {
-  .profile__intro {
-    min-height: 60px;
-  }
 }

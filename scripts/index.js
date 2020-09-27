@@ -4,14 +4,13 @@ const popup = document.querySelector(".popup");
 const submitButton = document.querySelector(".popup__content");
 let name = document.querySelector(".profile__name");
 let about = document.querySelector(".profile__about");
-let nameNew = document.querySelector(".popup__name");
-let aboutNew = document.querySelector(".popup__about");
+let nameNew = document.querySelector(".popup__input_place_name");
+let aboutNew = document.querySelector(".popup__input_place_about");
 
 function popupToggle() {
+  popup.classList.toggle("popup_is-opened");
+  
   if (popup.classList.contains("popup_is-opened")) {
-    popup.classList.toggle("popup_is-opened");
-  } else {
-    popup.classList.toggle("popup_is-opened");
     nameNew.value = name.textContent;
     aboutNew.value = about.textContent;
   }

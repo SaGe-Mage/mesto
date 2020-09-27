@@ -8,7 +8,6 @@
 
 @media screen and (max-width: 688px) {
   .profile__wrapper {
-    min-height: 200px;
     flex-direction: column;
     text-align: center;
   }
