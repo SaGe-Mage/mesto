@@ -8,10 +8,13 @@ let nameNew = document.querySelector(".popup__name");
 let aboutNew = document.querySelector(".popup__about");
 
 function popupToggle() {
-  popup.classList.toggle("popup_is-opened");
-
-  nameNew.value = name.textContent;
-  aboutNew.value = about.textContent;
+  if (popup.classList.contains("popup_is-opened")) {
+    popup.classList.toggle("popup_is-opened");
+  } else {
+    popup.classList.toggle("popup_is-opened");
+    nameNew.value = name.textContent;
+    aboutNew.value = about.textContent;
+  }
 }
 
 function saveData(event) {
@@ -20,7 +23,7 @@ function saveData(event) {
   name.textContent = nameNew.value;
   about.textContent = aboutNew.value;
 
-  popup.classList.toggle("popup_is-opened");
+  popupToggle();
 }
 
 buttenOpen.addEventListener("click", popupToggle);
