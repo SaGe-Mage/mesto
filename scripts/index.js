@@ -21,11 +21,6 @@ const link = document.querySelector('.popup__input_place_link');
 
 function popupOpen(popup) {
   popup.classList.add('popup_is-opened');
-
-  if (popup.classList.contains('popup_place_edit')) {
-    nameNew.value = name.textContent;
-    aboutNew.value = about.textContent;
-  }
 }
 
 function popupClose(popup) {
@@ -43,16 +38,17 @@ function saveData(event) {
 
 function addCard(name, link) {
   const element = elementsTemplate.content.cloneNode(true);
+  const picture = element.querySelector('.element__pic');
 
-  element.querySelector('.element__pic').src = link;
-  element.querySelector('.element__pic').alt = name;
+  picture.src = link;
+  picture.alt = name;
   element.querySelector('.element__title').textContent = name;
 
   element.querySelector('.element__delete').addEventListener('click', evt => {
     evt.target.closest('.element').remove();
   });
 
-  element.querySelector('.element__pic').addEventListener('click', evt => {
+  picture.addEventListener('click', () => {
     pic.setAttribute('src', link);
     capture.textContent = name;
 
