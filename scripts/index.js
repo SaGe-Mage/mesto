@@ -20,12 +20,12 @@ const place = document.querySelector('.popup__input_place_location');
 const link = document.querySelector('.popup__input_place_link');
 
 function addListener(item) {
-  item.addEventListener('click', closeClickOverlay);
+  item.addEventListener('mousedown', closeClickOverlay);
   document.addEventListener('keydown', closeKeyOverlay);
 }
 
 function removeListener(item) {
-  item.removeEventListener('click', closeClickOverlay);
+  item.removeEventListener('mousedown', closeClickOverlay);
   document.removeEventListener('keydown', closeKeyOverlay);
 }
 
@@ -36,7 +36,7 @@ function closeClickOverlay(event) {
 }
 
 function closeKeyOverlay (event) {
-  if (event.keyCode === 27) {
+  if (event.key === 'Escape') {
     const popup = document.querySelector('.popup_is-opened');
     popupClose(popup);
   }
@@ -61,7 +61,7 @@ function saveData(event) {
   popupClose(popupEdit);
 }
 
-function addCard(name, link) {
+function createCard(name, link) {
   const element = elementsTemplate.content.cloneNode(true);
   const picture = element.querySelector('.element__pic');
 
@@ -75,6 +75,7 @@ function addCard(name, link) {
 
   picture.addEventListener('click', () => {
     pic.setAttribute('src', link);
+    pic.setAttribute('alt', name);
     capture.textContent = name;
 
     popupOpen(popupPic);
@@ -84,7 +85,11 @@ function addCard(name, link) {
     event.target.classList.toggle('element__like_active');
   });
 
-  gallery.prepend(element);
+  return element;
+}
+
+function addCard(name, link) {
+  gallery.prepend(createCard(name, link));
 }
 
 function newCard(event) {
@@ -101,8 +106,11 @@ buttonOpenEdit.addEventListener('click', () => {
   popupOpen(popupEdit);
 });
 buttonOpenAdd.addEventListener('click', () => {
+  const button = popupAdd.querySelector('.popup__button_place_add')
   place.value = '';
   link.value = '';
+  button.classList.add('popup__button_inactive');
+  button.setAttribute('disabled', true);
   popupOpen(popupAdd);
 });
 buttonCloseEdit.addEventListener('click', () => popupClose(popupEdit));
