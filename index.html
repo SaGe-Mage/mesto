@@ -42,10 +42,12 @@
     <section class="popup popup_place_edit">
       <div class="popup__container">
         <button type="button" class="popup__close-button popup__close-button_place_edit"></button>
-        <form name="edit-popup" method="GET" class="popup__content popup__content_place_edit">
+        <form name="edit-popup" method="GET" class="popup__content popup__content_place_edit" novalidate>
           <h2 class="popup__title">Редактировать профиль</h2>
-          <input type="text" name="name" class="popup__input popup__input_place_name">
-          <input type="text" name="about" class="popup__input popup__input_place_about">
+          <input type="text" name="name" class="popup__input popup__input_place_name" id="name-input" minlength="2" maxlength="40" required>
+          <span class="popup__input-error" id="name-input-error"></span>
+          <input type="text" name="about" class="popup__input popup__input_place_about" id="about-input" minlength="2" maxlength="400" required>
+          <span class="popup__input-error" id="about-input-error"></span>
           <button type="submit" name="submit" class="popup__button popup__button_place_edit">Сохранить</button>
         </form>
       </div>
@@ -54,10 +56,12 @@
     <section class="popup popup_place_add">
       <div class="popup__container">
         <button type="button" class="popup__close-button popup__close-button_place_add"></button>
-        <form name="add-popup" method="GET" class="popup__content popup__content_place_add">
+        <form name="add-popup" method="GET" class="popup__content popup__content_place_add" novalidate>
           <h2 class="popup__title">Новое место</h2>
-          <input type="text" name="location" placeholder="Название" class="popup__input popup__input_place_location">
-          <input type="text" name="link" placeholder="Ссылка на картинку" class="popup__input popup__input_place_link">
+          <input type="text" name="location" placeholder="Название" class="popup__input popup__input_place_location" id="location-input" minlength="2" maxlength="30" required>
+          <span class="popup__input-error" id="location-input-error"></span>
+          <input type="url" name="link" placeholder="Ссылка на картинку" class="popup__input popup__input_place_link" id="link-input" required>
+          <span class="popup__input-error" id="link-input-error"></span>
           <button type="submit" name="submit" class="popup__button">Создать</button>
         </form>
       </div>
@@ -87,6 +91,7 @@
 
   <script src="scripts/initial-cards.js"></script>
   <script src="scripts/index.js"></script>
+  <script src="scripts/validate.js"></script>
 </body>
 
 </html>

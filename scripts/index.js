@@ -19,12 +19,37 @@ const capture = popupPic.querySelector('.popup_caption');
 const place = document.querySelector('.popup__input_place_location');
 const link = document.querySelector('.popup__input_place_link');
 
+function addListener(item) {
+  item.addEventListener('click', closeClickOverlay);
+  document.addEventListener('keydown', closeKeyOverlay);
+}
+
+function removeListener(item) {
+  item.removeEventListener('click', closeClickOverlay);
+  document.removeEventListener('keydown', closeKeyOverlay);
+}
+
+function closeClickOverlay(event) {
+  if (event.target.classList.contains('popup_is-opened')) {
+    popupClose(event.target);
+  }
+}
+
+function closeKeyOverlay (event) {
+  if (event.keyCode === 27) {
+    const popup = document.querySelector('.popup_is-opened');
+    popupClose(popup);
+  }
+}
+
 function popupOpen(popup) {
+  addListener(popup);
   popup.classList.add('popup_is-opened');
 }
 
 function popupClose(popup) {
   popup.classList.remove('popup_is-opened');
+  removeListener(popup);
 }
 
 function saveData(event) {
@@ -44,8 +69,8 @@ function addCard(name, link) {
   picture.alt = name;
   element.querySelector('.element__title').textContent = name;
 
-  element.querySelector('.element__delete').addEventListener('click', evt => {
-    evt.target.closest('.element').remove();
+  element.querySelector('.element__delete').addEventListener('click', event => {
+    event.target.closest('.element').remove();
   });
 
   picture.addEventListener('click', () => {
@@ -55,8 +80,8 @@ function addCard(name, link) {
     popupOpen(popupPic);
   });
 
-  element.querySelector('.element__like').addEventListener('click', evt => {
-    evt.target.classList.toggle('element__like_active');
+  element.querySelector('.element__like').addEventListener('click', event => {
+    event.target.classList.toggle('element__like_active');
   });
 
   gallery.prepend(element);
@@ -73,12 +98,12 @@ function newCard(event) {
 buttonOpenEdit.addEventListener('click', () => {
   nameNew.value = name.textContent;
   aboutNew.value = about.textContent;
-  popupOpen(popupEdit)
+  popupOpen(popupEdit);
 });
 buttonOpenAdd.addEventListener('click', () => {
   place.value = '';
   link.value = '';
-  popupOpen(popupAdd)
+  popupOpen(popupAdd);
 });
 buttonCloseEdit.addEventListener('click', () => popupClose(popupEdit));
 buttonCloseAdd.addEventListener('click', () => popupClose(popupAdd));

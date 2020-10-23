@@ -7,7 +7,7 @@
   background-color: rgba(0, 0, 0, 0);
   background-image: url("../../../images/close-icon.svg");
   background-size: contain;
-  background-size: contain;
+  background-repeat: no-repeat;
   border: none;
   width: 58px;
   height: 58px;
