@@ -1,5 +1,9 @@
 import {
-  popupOpen
+  caption,
+  popupPic
+} from './data.js';
+import {
+  openPopup
 } from './index.js';
 
 export class Card {
@@ -33,11 +37,12 @@ export class Card {
   }
 
   _handleDeleteCard() {
-    this._element.closest('.element').remove();
+    this._element.remove();
+    this._element = null;
   }
 
-  _handleLike(event) {
-    event.target.classList.toggle('element__like_active');
+  _handleLike() {
+    this._element.querySelector('.element__like').classList.toggle('element__like_active');
   }
 
   _handleOpenPopup() {
@@ -45,17 +50,17 @@ export class Card {
 
     pic.setAttribute('src', this._link);
     pic.setAttribute('alt', this._name);
-    document.querySelector('.popup_caption').textContent = this._name;
+    caption.textContent = this._name;
 
-    popupOpen(document.querySelector('.popup_place_pic'));
+    openPopup(popupPic);
   }
 
   _setEventListeners() {
     this._element.querySelector('.element__delete').addEventListener('click', () => {
       this._handleDeleteCard();
     });
-    this._element.querySelector('.element__like').addEventListener('click', (event) => {
-      this._handleLike(event);
+    this._element.querySelector('.element__like').addEventListener('click', () => {
+      this._handleLike();
     });
     this._element.querySelector('.element__pic').addEventListener('click', () => {
       this._handleOpenPopup();

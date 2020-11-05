@@ -24,6 +24,9 @@ export const initialCards = [{
 }
 ];
 
+export const caption = document.querySelector('.popup_caption');
+export const popupPic = document.querySelector('.popup_place_pic');
+
 export const validationConfig = {
   formSelector: '.popup__content',
   inputSelector: '.popup__input',
@@ -32,3 +35,5 @@ export const validationConfig = {
   inputErrorClass: 'popup__input_type_error',
   errorClass: 'popup_input-error_active'
 };
+
+export const ESC_CODE = 27;
