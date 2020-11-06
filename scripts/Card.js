@@ -1,10 +1,11 @@
 import {
   caption,
-  popupPic
+  popupPic,
+  pic
 } from './data.js';
 import {
   openPopup
-} from './index.js';
+} from './utils.js';
 
 export class Card {
   constructor(data, cardSelector) {
@@ -46,8 +47,6 @@ export class Card {
   }
 
   _handleOpenPopup() {
-    const pic = document.querySelector('.popup__pic');
-
     pic.setAttribute('src', this._link);
     pic.setAttribute('alt', this._name);
     caption.textContent = this._name;
