@@ -27,6 +27,7 @@ const nameNew = document.querySelector('.popup__input_place_name');
 const aboutNew = document.querySelector('.popup__input_place_about');
 const place = document.querySelector('.popup__input_place_location');
 const link = document.querySelector('.popup__input_place_link');
+const formList = Array.from(document.querySelectorAll('.popup__content'));
 
 function addListener(item) {
   item.addEventListener('mousedown', closeClickOverlay);
@@ -112,7 +113,7 @@ initialCards.forEach((item) => {
   renderCard(item);
 });
 
-Array.from(document.querySelectorAll('.popup__content')).forEach((item) => {
+formList.forEach((item) => {
   const validator = new FormValidator(validationConfig, item);
   validator.enableValidation();
 });
