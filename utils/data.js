@@ -24,10 +24,6 @@ export const initialCards = [{
   }
 ];
 
-export const caption = document.querySelector('.popup_caption');
-export const popupPic = document.querySelector('.popup_place_pic');
-export const pic = document.querySelector('.popup__pic');
-
 export const validationConfig = {
   formSelector: '.popup__content',
   inputSelector: '.popup__input',

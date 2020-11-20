@@ -60,7 +60,7 @@
         <button type="button" class="popup__close-button popup__close-button_place_add"></button>
         <form name="add-popup" method="GET" class="popup__content popup__content_place_add" novalidate>
           <h2 class="popup__title">Новое место</h2>
-          <input type="text" name="location" placeholder="Название" class="popup__input popup__input_place_location"
+          <input type="text" name="name" placeholder="Название" class="popup__input popup__input_place_location"
             id="location-input" minlength="2" maxlength="30" required>
           <span class="popup__input-error" id="location-input-error"></span>
           <input type="url" name="link" placeholder="Ссылка на картинку" class="popup__input popup__input_place_link"
@@ -76,7 +76,7 @@
         <button type="button" class="popup__close-button popup__close-button_place_pic"></button>
         <figure class="popup__item">
           <img class="popup__pic">
-          <figcaption class="popup_caption"></figcaption>
+          <figcaption class="popup__caption"></figcaption>
         </figure>
       </div>
     </section>
@@ -93,7 +93,7 @@
     </article>
   </template>
 
-  <script type="module" src="scripts/index.js"></script>
+  <script type="module" src="pages/index.js"></script>
 </body>
 
 </html>

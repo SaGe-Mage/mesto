@@ -1,14 +1,6 @@
-import {
-  caption,
-  popupPic,
-  pic
-} from './data.js';
-import {
-  openPopup
-} from './utils.js';
-
-export class Card {
-  constructor(data, cardSelector) {
+export default class Card {
+  constructor(data, cardSelector, handleCardClick) {
+    this._handleCardClick = handleCardClick;
     this._name = data.name;
     this._link = data.link;
     this._cardSelector = cardSelector;
@@ -46,14 +38,6 @@ export class Card {
     this._element.querySelector('.element__like').classList.toggle('element__like_active');
   }
 
-  _handleOpenPopup() {
-    pic.setAttribute('src', this._link);
-    pic.setAttribute('alt', this._name);
-    caption.textContent = this._name;
-
-    openPopup(popupPic);
-  }
-
   _setEventListeners() {
     this._element.querySelector('.element__delete').addEventListener('click', () => {
       this._handleDeleteCard();
@@ -62,7 +46,7 @@ export class Card {
       this._handleLike();
     });
     this._element.querySelector('.element__pic').addEventListener('click', () => {
-      this._handleOpenPopup();
+      this._handleCardClick(this._name, this._link);
     });
   }
 }
