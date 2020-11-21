@@ -82,14 +82,14 @@ validatorAdd.enableValidation();
 buttonOpenEdit.addEventListener('click', () => {
   nameNew.value = name.textContent;
   aboutNew.value = about.textContent;
+  validatorEdit.clearingErrors();
   popupEditForm.open();
 });
 
 buttonOpenAdd.addEventListener('click', () => {
-  const button = popupAdd.querySelector('.popup__button_place_add')
   place.value = '';
   link.value = '';
-  button.classList.add('popup__button_inactive');
-  button.setAttribute('disabled', 'true');
+  validatorAdd.clearingErrors();
+  validatorAdd.disableButton();
   popupAddForm.open();
 });
