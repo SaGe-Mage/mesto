@@ -25,6 +25,8 @@ import {
   popupPic
 } from '../utils/dom.js'
 
+import './index.css';
+
 function renderCard(data) {
   const card = new Card(data, '#elements-template', (name, link) => {
     imagePopup.open({
