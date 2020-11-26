@@ -28,13 +28,12 @@ import {
 import './index.css';
 
 function renderCard(data) {
-  const card = new Card(data, '#elements-template', (name, link) => {
+  return new Card(data, '#elements-template', (name, link) => {
     imagePopup.open({
       name: name,
       link: link
     });
   });
-  return card;
 }
 
 const imagePopup = new PopupWithImage(popupPic);
