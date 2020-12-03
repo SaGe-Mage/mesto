@@ -37,13 +37,13 @@ export default class Api {
 		});
 	}
 
-	addNewCard(newCardName, newCardLink) {
+	addNewCard(newCard) {
 		return this._sendRequest('cards', {
 			method: 'POST',
 			headers: this._headers,
 			body: JSON.stringify({
-				name: newCardName,
-				link: newCardLink
+				name: newCard.name,
+				link: newCard.link
 			})
 		});
 	}

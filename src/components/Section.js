@@ -1,17 +1,19 @@
 export default class Section {
-  constructor({items, renderer}, containerSelector) {
-    this._renderedItems = items;
-    this._renderer = renderer;
-    this._container = containerSelector;
-  }
+	constructor({renderer}, containerSelector) {
+		this._renderer = renderer;
+		this._container = containerSelector;
+	}
 
-  addItem(element) {
-    this._container.prepend(element);
-  }
+	addItem(element) {
+		this._container.prepend(element);
+	}
 
-  renderItems() {
-    this._renderedItems.forEach(element => {
-      this._renderer(element);
-    });
-  }
+	renderItems(cards) {
+		cards.then((data) => {
+			data.forEach(element => {
+				this._renderer(element);
+			});
+		})
+			.catch((err) => console.log(`Что-то пошло не так: ${err}`));
+	}
 }

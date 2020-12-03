@@ -6,7 +6,6 @@ import PopupWithForm from '../components/PopupWithForm.js';
 import UserInfo from '../components/UserInfo.js';
 import Section from '../components/Section.js';
 import {
-	initialCards,
 	validationConfig,
 	apiOption
 } from '../utils/data.js';
@@ -30,7 +29,7 @@ import './index.css';
 const api = new Api(apiOption);
 
 function renderCard(data) {
-	return new Card(data, '#elements-template', (name, link) => {
+	return new Card(data, api,'#elements-template', (name, link) => {
 		imagePopup.open({
 			name: name,
 			link: link
@@ -42,13 +41,14 @@ const imagePopup = new PopupWithImage(popupPic);
 imagePopup.setEventListeners();
 
 const myList = new Section({
-  items: initialCards,
-  renderer: item => {
-    const card = renderCard(item);
-    const cardElement = card.generateCard();
-    myList.addItem(cardElement);
-  }
+	renderer: item => {
+		const card = renderCard(item);
+		const cardElement = card.generateCard();
+		myList.addItem(cardElement);
+	}
 }, gallery);
+
+myList.renderItems(api.getInitialCards());
 
 const userInfo = new UserInfo({
 	userNameSelector: '.profile__name',
@@ -66,13 +66,12 @@ popupEditForm.setEventListeners();
 const popupAddForm = new PopupWithForm(popupAdd, inputValues => {
 	const card = renderCard(inputValues);
 	const cardElement = card.generateCard();
+	api.addNewCard(inputValues);
 	myList.addItem(cardElement);
 	popupAddForm.close();
 });
 
 popupAddForm.setEventListeners();
-
-myList.renderItems();
 
 const validatorEdit = new FormValidator(validationConfig, formEdit);
 validatorEdit.enableValidation();
