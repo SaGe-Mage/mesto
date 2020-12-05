@@ -10,7 +10,7 @@ export default class Section {
 
 	renderItems(cards) {
 		cards.then((data) => {
-			data.forEach(element => {
+			data.reverse().forEach(element => {
 				this._renderer(element);
 			});
 		})

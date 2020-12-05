@@ -1,10 +1,13 @@
 export default class Card {
-	constructor(data, api, cardSelector, handleCardClick) {
+	constructor(data, api, {cardSelector, handleCardClick, handleCardDelete}) {
 		this._api = api;
 		this._id = data._id;
+		this._owner = data.owner;
 		this._handleCardClick = handleCardClick;
+		this._handleDeleteCard = handleCardDelete;
 		this._name = data.name;
 		this._link = data.link;
+		this._likes = data.likes;
 		this._cardSelector = cardSelector;
 	}
 
@@ -24,14 +27,23 @@ export default class Card {
 		picture.src = this._link;
 		picture.alt = this._name;
 		this._element.querySelector('.element__title').textContent = this._name;
+		this._element.id = this._id;
+		this._element.querySelector('.element__like-count').textContent = `${this._likes.length}`;
+
+		if (this._likes.find((like) => like._id === "489eac35dce0c533c828783e")) {
+			this._element
+				.querySelector('.element__like')
+				.classList.add('element__like_active');
+		}
+
+
+		if ("489eac35dce0c533c828783e" === this._owner._id) {
+			this._element.querySelector('.element__delete').style.display = 'block';
+		}
+
 		this._setEventListeners();
 
 		return this._element;
-	}
-
-	_handleDeleteCard() {
-		this._element.remove();
-		this._element = null;
 	}
 
 	_handleLike() {

@@ -3,6 +3,7 @@ import Card from '../components/Card.js';
 import Api from '../components/Api.js'
 import PopupWithImage from '../components/PopupWithImage.js';
 import PopupWithForm from '../components/PopupWithForm.js';
+import PopupDeleteCard from "../components/PopupDeleteCard.js";
 import UserInfo from '../components/UserInfo.js';
 import Section from '../components/Section.js';
 import {
@@ -21,7 +22,11 @@ import {
 	aboutNew,
 	place,
 	link,
-	popupPic
+	popupPic,
+	popupDel,
+	popupAvatar,
+	buttonOpenAvatar,
+	formAvatar
 } from '../utils/dom.js'
 
 import './index.css';
@@ -29,26 +34,37 @@ import './index.css';
 const api = new Api(apiOption);
 
 function renderCard(data) {
-	return new Card(data, api,'#elements-template', (name, link) => {
-		imagePopup.open({
-			name: name,
-			link: link
-		});
+	return new Card(data, api, {
+		cardSelector: '#elements-template',
+		handleCardClick: (name, link) => {
+			imagePopup.open({
+				name: name,
+				link: link
+			})
+		},
+		handleCardDelete: () => {
+			const deletePopup = new PopupDeleteCard(popupDel, api, data);
+			deletePopup.open();
+		}
 	});
 }
 
-const imagePopup = new PopupWithImage(popupPic);
-imagePopup.setEventListeners();
+const cardList = new Section(
+	{
+		renderer: (cardItem) => {
+			const card = renderCard(cardItem);
+			api.getUserInfo()
+				.then((data) => {
+					const cardElement = card.generateCard(data);
+					cardList.addItem(cardElement);
+				})
+				.catch((err) => console.log(`Что-то пошло не так: ${err}`));
+		},
+	},
+	gallery
+);
 
-const myList = new Section({
-	renderer: item => {
-		const card = renderCard(item);
-		const cardElement = card.generateCard();
-		myList.addItem(cardElement);
-	}
-}, gallery);
-
-myList.renderItems(api.getInitialCards());
+cardList.renderItems(api.getInitialCards());
 
 const userInfo = new UserInfo({
 	userNameSelector: '.profile__name',
@@ -56,28 +72,61 @@ const userInfo = new UserInfo({
 	userAvatarSelector: '.profile__avatar'
 });
 
-const popupEditForm = new PopupWithForm(popupEdit, inputValues => {
-	userInfo.setUserInfo(inputValues.name, inputValues.about);
-	popupEditForm.close();
-});
+const imagePopup = new PopupWithImage(popupPic);
 
-popupEditForm.setEventListeners();
+const popupEditForm = new PopupWithForm(popupEdit, inputValues => {
+	popupEditForm.renderLoading(true);
+	api.updateUserInfo(inputValues)
+		.then((data) => {
+			userInfo.setUserInfo(data);
+		})
+		.catch((err) => console.log(`Что-то пошло не так: ${err}`))
+		.finally(() => {
+			popupEditForm.renderLoading(false);
+			popupEditForm.close();
+		});
+});
 
 const popupAddForm = new PopupWithForm(popupAdd, inputValues => {
-	const card = renderCard(inputValues);
-	const cardElement = card.generateCard();
-	api.addNewCard(inputValues);
-	myList.addItem(cardElement);
-	popupAddForm.close();
+	popupAddForm.renderLoading(true);
+	api.addNewCard(inputValues)
+		.then((data) => {
+			const newCard = renderCard(data);
+			api.getUserInfo()
+				.then((data) => {
+					const newCardElement = newCard.generateCard(data);
+					cardList.addItem(newCardElement);
+				})
+				.catch((err) => console.log(`Что-то пошло не так: ${err}`));
+		})
+		.catch((err) => console.log(`Что-то пошло не так: ${err}`))
+		.finally(() => {
+			popupAddForm.renderLoading(false);
+			popupAddForm.close();
+		});
 });
 
-popupAddForm.setEventListeners();
+const popupAvatarForm = new PopupWithForm(popupAvatar, inputValues => {
+	popupAvatarForm.renderLoading(true);
+	api.updateUserAvatar(inputValues.avatar)
+		.then((data) => {
+			userInfo.setUserAvatar(data);
+		})
+		.catch((err) => console.log(`Что-то пошло не так: ${err}`))
+		.finally(() => {
+			popupAvatarForm.renderLoading(false);
+			popupAvatarForm.close();
+		});
+});
 
 const validatorEdit = new FormValidator(validationConfig, formEdit);
 validatorEdit.enableValidation();
 
 const validatorAdd = new FormValidator(validationConfig, formAdd);
 validatorAdd.enableValidation();
+
+const validatorAvatar = new FormValidator(validationConfig, formAvatar);
+validatorAvatar.enableValidation()
 
 
 buttonOpenEdit.addEventListener('click', () => {
@@ -96,8 +145,15 @@ buttonOpenAdd.addEventListener('click', () => {
 	popupAddForm.open();
 });
 
+buttonOpenAvatar.addEventListener('click', () => {
+	validatorAvatar.clearingErrors();
+	validatorAvatar.disableButton();
+	popupAvatarForm.open();
+})
+
 api.getUserInfo()
 	.then((data) => {
 		userInfo.setUserAvatar(data.avatar);
-		userInfo.setUserInfo(data.name, data.about);
-	});
+		userInfo.setUserInfo(data);
+	})
+	.catch((err) => console.log(`Что-то пошло не так: ${err}`));

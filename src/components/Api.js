@@ -26,13 +26,13 @@ export default class Api {
 		});
 	}
 
-	updateUserInfo(newName, newAbout) {
+	updateUserInfo(data) {
 		return this._sendRequest('users/me', {
 			method: 'PATCH',
 			headers: this._headers,
 			body: JSON.stringify({
-				name: newName,
-				about: newAbout
+				name: data.name,
+				about: data.about
 			})
 		});
 	}
