@@ -9,11 +9,8 @@ export default class Section {
 	}
 
 	renderItems(cards) {
-		cards.then((data) => {
-			data.reverse().forEach(element => {
-				this._renderer(element);
-			});
+		cards.reverse().forEach(element => {
+			this._renderer(element);
 		})
-			.catch((err) => console.log(`Что-то пошло не так: ${err}`));
 	}
 }

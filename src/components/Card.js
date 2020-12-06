@@ -1,5 +1,5 @@
 export default class Card {
-	constructor(data, api, {cardSelector, handleCardClick, handleCardDelete}) {
+	constructor(data, api, userData, {cardSelector, handleCardClick, handleCardDelete}) {
 		this._api = api;
 		this._id = data._id;
 		this._owner = data.owner;
@@ -8,6 +8,7 @@ export default class Card {
 		this._name = data.name;
 		this._link = data.link;
 		this._likes = data.likes;
+		this._userId = userData._id;
 		this._cardSelector = cardSelector;
 	}
 
@@ -30,14 +31,12 @@ export default class Card {
 		this._element.id = this._id;
 		this._element.querySelector('.element__like-count').textContent = `${this._likes.length}`;
 
-		if (this._likes.find((like) => like._id === "489eac35dce0c533c828783e")) {
-			this._element
-				.querySelector('.element__like')
-				.classList.add('element__like_active');
+		if (this._likes.find((like) => like._id === this._userId)) {
+			this._updateLikes().classList.add('element__like_active');
 		}
 
 
-		if ("489eac35dce0c533c828783e" === this._owner._id) {
+		if (this._userId === this._owner._id) {
 			this._element.querySelector('.element__delete').style.display = 'block';
 		}
 
@@ -47,24 +46,27 @@ export default class Card {
 	}
 
 	_handleLike() {
-		const likeButton = this._element.querySelector('.element__like');
 		const likeCount = this._element.querySelector('.element__like-count');
 
-		if (!likeButton.classList.contains('element__like_active')) {
+		if (!this._updateLikes().classList.contains('element__like_active')) {
 			this._api.likesCard(this._id)
 				.then((data) => {
-					likeButton.classList.add('element__like_active');
+					this._updateLikes().classList.add('element__like_active');
 					likeCount.textContent = `${data.likes.length}`;
 				})
 				.catch((err) => console.log(`Что-то пошло не так: ${err}`));
 		} else {
 			this._api.dislikesCard(this._id)
 				.then((data) => {
-					likeButton.classList.remove('element__like_active');
+					this._updateLikes().classList.remove('element__like_active');
 					likeCount.textContent = `${data.likes.length}`;
 				})
 				.catch((err) => console.log(`Что-то пошло не так: ${err}`));
 		}
+	}
+
+	_updateLikes() {
+		return this._element.querySelector('.element__like');
 	}
 
 	_setEventListeners() {

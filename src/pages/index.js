@@ -33,8 +33,8 @@ import './index.css';
 
 const api = new Api(apiOption);
 
-function renderCard(data) {
-	return new Card(data, api, {
+function renderCard(data, userData) {
+	return new Card(data, api, userData, {
 		cardSelector: '#elements-template',
 		handleCardClick: (name, link) => {
 			imagePopup.open({
@@ -42,20 +42,22 @@ function renderCard(data) {
 				link: link
 			})
 		},
-		handleCardDelete: () => {
-			const deletePopup = new PopupDeleteCard(popupDel, api, data);
-			deletePopup.open();
+		handleCardDelete: (event) => {
+			deletePopup.open(api, event);
 		}
 	});
 }
 
+const deletePopup = new PopupDeleteCard(popupDel);
+deletePopup.setEventListeners();
+
 const cardList = new Section(
 	{
 		renderer: (cardItem) => {
-			const card = renderCard(cardItem);
 			api.getUserInfo()
 				.then((data) => {
-					const cardElement = card.generateCard(data);
+					const card = renderCard(cardItem, data);
+					const cardElement = card.generateCard();
 					cardList.addItem(cardElement);
 				})
 				.catch((err) => console.log(`Что-то пошло не так: ${err}`));
@@ -64,7 +66,13 @@ const cardList = new Section(
 	gallery
 );
 
-cardList.renderItems(api.getInitialCards());
+Promise.all([api.getUserInfo(), api.getInitialCards()])
+	.then((value) => {
+		userInfo.setUserAvatar(value[0]);
+		userInfo.setUserInfo(value[0]);
+		cardList.renderItems(value[1])
+	})
+	.catch((err) => console.log(`Что-то пошло не так: ${err}`));
 
 const userInfo = new UserInfo({
 	userNameSelector: '.profile__name',
@@ -73,51 +81,55 @@ const userInfo = new UserInfo({
 });
 
 const imagePopup = new PopupWithImage(popupPic);
+imagePopup.setEventListeners();
 
 const popupEditForm = new PopupWithForm(popupEdit, inputValues => {
 	popupEditForm.renderLoading(true);
 	api.updateUserInfo(inputValues)
 		.then((data) => {
 			userInfo.setUserInfo(data);
+			popupEditForm.close();
 		})
 		.catch((err) => console.log(`Что-то пошло не так: ${err}`))
 		.finally(() => {
 			popupEditForm.renderLoading(false);
-			popupEditForm.close();
 		});
 });
+popupEditForm.setEventListeners();
 
 const popupAddForm = new PopupWithForm(popupAdd, inputValues => {
 	popupAddForm.renderLoading(true);
 	api.addNewCard(inputValues)
-		.then((data) => {
-			const newCard = renderCard(data);
+		.then((card) => {
 			api.getUserInfo()
 				.then((data) => {
-					const newCardElement = newCard.generateCard(data);
+					const newCard = renderCard(card, data);
+					const newCardElement = newCard.generateCard();
 					cardList.addItem(newCardElement);
 				})
 				.catch((err) => console.log(`Что-то пошло не так: ${err}`));
+			popupAddForm.close();
 		})
 		.catch((err) => console.log(`Что-то пошло не так: ${err}`))
 		.finally(() => {
 			popupAddForm.renderLoading(false);
-			popupAddForm.close();
 		});
 });
+popupAddForm.setEventListeners();
 
 const popupAvatarForm = new PopupWithForm(popupAvatar, inputValues => {
 	popupAvatarForm.renderLoading(true);
 	api.updateUserAvatar(inputValues.avatar)
 		.then((data) => {
 			userInfo.setUserAvatar(data);
+			popupAvatarForm.close();
 		})
 		.catch((err) => console.log(`Что-то пошло не так: ${err}`))
 		.finally(() => {
 			popupAvatarForm.renderLoading(false);
-			popupAvatarForm.close();
 		});
 });
+popupAvatarForm.setEventListeners();
 
 const validatorEdit = new FormValidator(validationConfig, formEdit);
 validatorEdit.enableValidation();
@@ -150,10 +162,3 @@ buttonOpenAvatar.addEventListener('click', () => {
 	validatorAvatar.disableButton();
 	popupAvatarForm.open();
 })
-
-api.getUserInfo()
-	.then((data) => {
-		userInfo.setUserAvatar(data.avatar);
-		userInfo.setUserInfo(data);
-	})
-	.catch((err) => console.log(`Что-то пошло не так: ${err}`));
