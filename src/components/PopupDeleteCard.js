@@ -19,7 +19,7 @@ export default class PopupDeleteCard extends Popup {
 			event.preventDefault();
 			this._api.deleteCard(this._card._id)
 				.then(() => {
-					document.getElementById(this._card._id).remove();
+					this._card._handleDelete();
 				});
 			this._formElement.removeEventListener('submit', deleteHandler);
 			this.close();

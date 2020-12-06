@@ -65,13 +65,18 @@ export default class Card {
 		}
 	}
 
+	_handleDelete() {
+		this._element.remove();
+		this._element = null;
+	}
+
 	_updateLikes() {
 		return this._element.querySelector('.element__like');
 	}
 
 	_setEventListeners() {
 		this._element.querySelector('.element__delete').addEventListener('click', () => {
-			this._handleDeleteCard();
+			this._handleDeleteCard(this);
 		});
 		this._element.querySelector('.element__like').addEventListener('click', () => {
 			this._handleLike();

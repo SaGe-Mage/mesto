@@ -42,8 +42,8 @@ function renderCard(data, userData) {
 				link: link
 			})
 		},
-		handleCardDelete: (event) => {
-			deletePopup.open(api, event);
+		handleCardDelete: (item) => {
+			deletePopup.open(api, item);
 		}
 	});
 }
