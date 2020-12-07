@@ -54,23 +54,21 @@ deletePopup.setEventListeners();
 const cardList = new Section(
 	{
 		renderer: (cardItem) => {
-			api.getUserInfo()
-				.then((data) => {
-					const card = renderCard(cardItem, data);
-					const cardElement = card.generateCard();
-					cardList.addItem(cardElement);
-				})
-				.catch((err) => console.log(`Что-то пошло не так: ${err}`));
+			const card = renderCard(cardItem, userApiData);
+			const cardElement = card.generateCard();
+			cardList.addItem(cardElement);
 		},
 	},
 	gallery
 );
 
+let userApiData;
 Promise.all([api.getUserInfo(), api.getInitialCards()])
-	.then((value) => {
-		userInfo.setUserAvatar(value[0]);
-		userInfo.setUserInfo(value[0]);
-		cardList.renderItems(value[1])
+	.then(([userData, cards]) => {
+		userApiData = userData;
+		userInfo.setUserAvatar(userData);
+		userInfo.setUserInfo(userData);
+		cardList.renderItems(cards)
 	})
 	.catch((err) => console.log(`Что-то пошло не так: ${err}`));
 

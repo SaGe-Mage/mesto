@@ -29,12 +29,13 @@ export default class Card {
 		picture.alt = this._name;
 		this._element.querySelector('.element__title').textContent = this._name;
 		this._element.id = this._id;
-		this._element.querySelector('.element__like-count').textContent = `${this._likes.length}`;
+		this._likeButton = this._element.querySelector('.element__like');
+		this._likeCount = this._element.querySelector('.element__like-count');
+		this._likeCount.textContent = this._likes.length;
 
 		if (this._likes.find((like) => like._id === this._userId)) {
-			this._updateLikes().classList.add('element__like_active');
+			this._likeButton.classList.add('element__like_active');
 		}
-
 
 		if (this._userId === this._owner._id) {
 			this._element.querySelector('.element__delete').style.display = 'block';
@@ -46,20 +47,16 @@ export default class Card {
 	}
 
 	_handleLike() {
-		const likeCount = this._element.querySelector('.element__like-count');
-
-		if (!this._updateLikes().classList.contains('element__like_active')) {
+		if (!this._likeButton.classList.contains('element__like_active')) {
 			this._api.likesCard(this._id)
 				.then((data) => {
-					this._updateLikes().classList.add('element__like_active');
-					likeCount.textContent = `${data.likes.length}`;
+					this._updateLikes(data);
 				})
 				.catch((err) => console.log(`Что-то пошло не так: ${err}`));
 		} else {
 			this._api.dislikesCard(this._id)
 				.then((data) => {
-					this._updateLikes().classList.remove('element__like_active');
-					likeCount.textContent = `${data.likes.length}`;
+					this._updateLikes(data);
 				})
 				.catch((err) => console.log(`Что-то пошло не так: ${err}`));
 		}
@@ -70,8 +67,9 @@ export default class Card {
 		this._element = null;
 	}
 
-	_updateLikes() {
-		return this._element.querySelector('.element__like');
+	_updateLikes(data) {
+		this._likeButton.classList.toggle('element__like_active');
+		this._likeCount.textContent = data.likes.length;
 	}
 
 	_setEventListeners() {
